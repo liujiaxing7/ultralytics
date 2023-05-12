@@ -33,7 +33,7 @@ from ultralytics.yolo.utils.ops import clean_str, segments2boxes, xyn2xy, xywh2x
 from ultralytics.yolo.utils.torch_utils import torch_distributed_zero_first
 
 from .v5augmentations import (Albumentations, augment_hsv, classify_albumentations, classify_transforms, copy_paste,
-                              letterbox, mixup, random_perspective)
+                              letterbox, mixup, random_perspective, cutout)
 
 # Parameters
 HELP_URL = 'See https://docs.ultralytics.com/yolov5/tutorials/train_custom_data'
@@ -726,8 +726,8 @@ class LoadImagesAndLabels(Dataset):
                     labels[:, 1] = 1 - labels[:, 1]
 
             # Cutouts
-            # labels = cutout(img, labels, p=0.5)
-            # nl = len(labels)  # update after cutout
+            labels = cutout(img, labels, p=0.4)
+            nl = len(labels)  # update after cutout
 
         labels_out = torch.zeros((nl, 6))
         if nl:
